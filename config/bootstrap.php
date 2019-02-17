@@ -250,6 +250,9 @@ if($simplicity_setup_state > 1)
 /*
  * Only try to load DebugKit in development mode
  * Debug Kit should not be installed on a production system
+ * 
+ * TODO: Possible fix for connecting to database at this point:
+ * https://discourse.cakephp.org/t/enable-or-disable-debugkit-depending-on-user-setting/5633/5
  */
 if($simplicity_setup_state > 1 && Configure::read('debug'))
 {

@@ -1,13 +1,10 @@
 <?php 
 
-/* Simplicity default layout.
+/* Madskull Creations start-page layout.
  * 
  */
 
 
-/* Please feel free to re-define these in your own views. 
- * 
- */
 $this->start('simplicity_top_menu');
 	echo $this->Menu->GetMenu($homeTree, 'simplicity_top_menu', 'dropdown menu header-subnav', 'simplicity menu');
 $this->end();
@@ -23,20 +20,6 @@ $this->start('simplicity_side_menu');
   </div>
 <?php
   }
-  
-  // Normal users have this menu, or the side-menu are not shown at all.
-  if(count($sideMenuTree) > 0)
-  {
-?>
-  <div style="margin-bottom: 30px;">
-    <h6><?= __('Local Content') ?></h6>
-    <?= $this->Menu->GetAccordionMenu($sideMenuTree); ?>
-  </div>
-<?php
-  }
-$this->end();
-$this->start('simplicity_breadcrumbs');
-	echo $this->Menu->GetBreadCrumb($breadcrumbPath);
 $this->end();
 $this->start('simplicity_page_name');
 	// A bit odd, but to use a utility, we must give full path. 
@@ -77,7 +60,7 @@ $this->end();
 <html>
 <head>
   <?= $this->element('GoogleStats'); ?>
-
+  
   <?= $this->Html->charset() ?>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
@@ -97,10 +80,57 @@ $this->end();
 </head>
 <body>
   <style>
+    #simplicity-top-bar{
+      transition: all 400ms ease;
+      opacity: 1;
+      max-height: 500px; /* big number */
+      
+      background-color: black;
+      color: white;
+    }
+    #simplicity-top-bar.is_closed{
+      overflow: hidden;
+      max-height: 40px;
+      opacity: 0.2;
+    }
+    #simplicity-top-bar img, #simplicity-top-bar select, .site-title, .site-description{
+      transition: all 600ms ease;
+    }
+    #simplicity-top-bar:hover{
+      opacity: 1;
+    }
+    
+    .open-close-navigation{
+      float: left;
+      margin-right: 10px;
+    }
+    
+    .is_closed .language-selector{
+      max-height: 26px;
+      font-size: 0.6rem;
+    }
+    .is_closed .site-logo{
+      max-width: 56px;
+    }
+    .is_closed .site-title, .is_closed .site-description{
+      opacity: 0;
+    }
+    .is_closed .site-title-description{
+      /*align-items: initial;*/
+    }
+    .button.login, .button.logout{
+    }
+    .simplicity-footer{
+      padding: 20px;
+    }
+    .simplicity-footer .cell{
+      align-items: baseline;
+    }
   </style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
-      <nav id="simplicity-top-bar" class="">
+      <nav role="navigation" id="simplicity-top-bar" class="is_closed">
+        <a class="button open-close-navigation" title="" onclick="ToggleMenu();">Visa meny</a>
         <div class="control-box">
           <?php
             echo '<select class="language-selector" id="LanguageSelector" onchange="LanguageSelected();" title="'.__("Select your language").'">';
@@ -115,22 +145,13 @@ $this->end();
               echo '<option value="'.$key.'" '.$selected.'>'.$name.'</option>';
             }
             echo '</select>';
-            
-            if($userIsLoggedIn)
-            {
-              echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
-            }
-            else
-            {
-              echo '<a class="button login" title="'.__("Login").'" href="/users/login">'.__("Login").'</a>';
-            }            
           ?>
         </div>
         <div class="grid-container">
           <div class="grid-x site-title-description">
             <div class="cell small-4 medium-3 large-2">
               <?php 
-                $img = $this->Html->image('simplicity.png', ['class' => 'site-logo']);
+                $img = $this->Html->image('MadskullCreations.png', ['class' => 'site-logo']);
                 echo $this->Html->link($img, '/', ['escape' => false]); 
               ?>
             </div>
@@ -153,34 +174,42 @@ $this->end();
       </nav>
       
       <div id="simplicity-content">
-        <?= $this->fetch('simplicity_breadcrumbs') ?>
-                
         <?= $this->Flash->render() ?>
         
-        <div class="grid-container">
-          <div class="grid-x grid-margin-x">
-            <?php
-              if($userIsLoggedIn)
-              {
-            ?>
-            <div class="cell small-3">
-              <?= $this->fetch('simplicity_side_menu') ?>
-            </div>
-            <?php
-              }
-            ?>
-            <div class="cell auto">
-              <?= $this->fetch('content') ?>
-            </div>
-          </div>
+        <?php
+          if($userIsLoggedIn)
+          {
+        ?>
+        <div class="cell small-3">
+          <?= $this->fetch('simplicity_side_menu') ?>
+        </div>
+        <?php
+          }
+        ?>
+        
+        <div id="hackisch-block" style="height: 0; overflow: hidden; transition: all 600ms ease;">
+          <?= $this->fetch('content') ?>
         </div>
       </div>
       <footer class="simplicity-footer">
-        <div class="grid-container">
+        <div class="grid-container fluid">
           <div class="grid-x grid-margin-x">
           	<div class="cell auto">
               Powered by&nbsp;<a href="https://simplicity.madskullcreations.com" target="_blank">Simplicity CMS</a>&nbsp;- Simple yet powerful
           	</div>
+            
+            <div class="cell small-1">
+            <?php
+              if($userIsLoggedIn)
+              {
+                echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
+              }
+              else
+              {
+                echo '<a class="button login" title="'.__("Login").'" href="/users/login">'.__("Login").'</a>';
+              }            
+            ?>
+            </div>
           </div>
         </div>
       </footer>
@@ -200,6 +229,16 @@ $this->end();
     $(document).foundation();
     
     $('.site-logo').attr('draggable', false);
+    
+    function ToggleMenu()
+    {
+      $("#simplicity-top-bar").toggleClass("is_closed");
+    }
+    
+    $(function(){
+      var h = $("#simplicity-content").height();
+      $("#hackisch-block").height(h * 0.8);
+    });
     
 <?php
 if($userIsAuthor)
