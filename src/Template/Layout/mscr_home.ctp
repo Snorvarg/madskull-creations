@@ -121,7 +121,20 @@ $this->end();
     .button.login, .button.logout{
     }
     .simplicity-footer{
+      transition: all 400ms ease;
       padding: 20px;
+      height: 60px;
+      font-style: italic;
+      font-size: 16px;
+    }
+    .simplicity-footer.is_closed{
+      opacity: 0.2;
+      padding: 10px;
+      height: 40px;
+      font-size: 13px;
+    }
+    .simplicity-footer.is_closed:hover{
+      opacity: 1;
     }
     .simplicity-footer .cell{
       align-items: baseline;
@@ -191,25 +204,26 @@ $this->end();
           <?= $this->fetch('content') ?>
         </div>
       </div>
-      <footer class="simplicity-footer">
+      <footer class="simplicity-footer is_closed">
         <div class="grid-container fluid">
           <div class="grid-x grid-margin-x">
           	<div class="cell auto">
               Powered by&nbsp;<a href="https://simplicity.madskullcreations.com" target="_blank">Simplicity CMS</a>&nbsp;- Simple yet powerful
           	</div>
             
-            <div class="cell small-1">
             <?php
+              // Start page need no login button.
               if($userIsLoggedIn)
               {
-                echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
-              }
-              else
-              {
-                echo '<a class="button login" title="'.__("Login").'" href="/users/login">'.__("Login").'</a>';
-              }            
+            ?>
+            <div class="cell small-1">
+            <?php
+              echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
             ?>
             </div>
+            <?php
+              }
+            ?>
           </div>
         </div>
       </footer>
@@ -233,6 +247,7 @@ $this->end();
     function ToggleMenu()
     {
       $("#simplicity-top-bar").toggleClass("is_closed");
+      $(".simplicity-footer").toggleClass("is_closed");
     }
     
     $(function(){
