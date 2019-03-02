@@ -6,7 +6,7 @@
 
 
 $this->start('simplicity_top_menu');
-	echo $this->Menu->GetMenu($homeTree, 'simplicity_top_menu', 'dropdown menu header-subnav', 'simplicity menu');
+	echo $this->Menu->GetSimpleMenu($homeTree, 'simplicity_top_menu', 'dropdown menu header-subnav', 'simplicity menu');
 $this->end();
 $this->start('simplicity_side_menu');
 	echo '<h4>Menu</h4>';
@@ -80,29 +80,44 @@ $this->end();
 </head>
 <body>
   <style>
+    body{
+      overflow-y:scroll;
+    }
+    
     #simplicity-top-bar{
       transition: all 400ms ease;
       opacity: 1;
       max-height: 500px; /* big number */
+      /* TODO: Not working, flex: 1 1 auto aint working with changing height or max-height here! */
       
       background-color: black;
       color: white;
     }
     #simplicity-top-bar.is_closed{
       overflow: hidden;
-      max-height: 40px;
+      max-height: 45px;
       opacity: 0.2;
     }
-    #simplicity-top-bar img, #simplicity-top-bar select, .site-title, .site-description{
+    #simplicity-top-bar img, #simplicity-top-bar select, .site-title, .site-description, .top-menu-bar{
       transition: all 600ms ease;
     }
-    #simplicity-top-bar:hover{
+    #simplicity-top-bar:hover, #simplicity-top-bar:active{
       opacity: 1;
     }
     
+    .top-menu-bar{
+      overflow: hidden;
+      max-height: 500px;
+    }
+    .is_closed .top-menu-bar{
+      max-height: 0;
+    }
     .open-close-navigation{
       float: left;
-      margin-right: 10px;
+      margin: 10px;
+    }
+    .open-close-navigation:focus{
+      outline: none;
     }
     
     .is_closed .language-selector{
@@ -110,7 +125,8 @@ $this->end();
       font-size: 0.6rem;
     }
     .is_closed .site-logo{
-      max-width: 56px;
+      max-width: 36px;
+      margin-top: 2px;
     }
     .is_closed .site-title, .is_closed .site-description{
       opacity: 0;
@@ -136,14 +152,21 @@ $this->end();
     .simplicity-footer.is_closed:hover{
       opacity: 1;
     }
+    
     .simplicity-footer .cell{
       align-items: baseline;
     }
+    
+@media print, screen and (max-width: 40em){ /* Mobile */
+    .simplicity-footer{
+      font-size: 3vw;
+    }
+}       
   </style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
       <nav role="navigation" id="simplicity-top-bar" class="is_closed">
-        <a class="button open-close-navigation" title="" onclick="ToggleMenu();">Visa meny</a>
+        <button class="menu-icon open-close-navigation" title="<?= __('Toggle menu') ?>" onclick="ToggleMenu();"></button>
         <div class="control-box">
           <?php
             echo '<select class="language-selector" id="LanguageSelector" onchange="LanguageSelected();" title="'.__("Select your language").'">';

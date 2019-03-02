@@ -126,7 +126,7 @@ $this->end();
             }            
           ?>
         </div>
-        <div class="grid-container">
+        <div class="grid-container fluid">
           <div class="grid-x site-title-description">
             <div class="cell small-4 medium-3 large-2">
               <?php 
@@ -176,7 +176,7 @@ $this->end();
         </div>
       </div>
       <footer class="simplicity-footer">
-        <div class="grid-container">
+        <div class="grid-container fluid">
           <div class="grid-x grid-margin-x">
           	<div class="cell auto">
               Powered by&nbsp;<a href="https://simplicity.madskullcreations.com" target="_blank">Simplicity CMS</a>&nbsp;- Simple yet powerful
