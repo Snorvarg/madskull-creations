@@ -80,15 +80,10 @@ $this->end();
 </head>
 <body>
   <style>
-    body{
-      overflow-y:scroll;
-    }
-    
     #simplicity-top-bar{
       transition: all 400ms ease;
       opacity: 1;
       max-height: 500px; /* big number */
-      /* TODO: Not working, flex: 1 1 auto aint working with changing height or max-height here! */
       
       background-color: black;
       color: white;
@@ -132,36 +127,9 @@ $this->end();
       opacity: 0;
     }
     .is_closed .site-title-description{
-      /*align-items: initial;*/
     }
     .button.login, .button.logout{
     }
-    .simplicity-footer{
-      transition: all 400ms ease;
-      padding: 20px;
-      height: 60px;
-      font-style: italic;
-      font-size: 16px;
-    }
-    .simplicity-footer.is_closed{
-      opacity: 0.2;
-      padding: 10px;
-      height: 40px;
-      font-size: 13px;
-    }
-    .simplicity-footer.is_closed:hover{
-      opacity: 1;
-    }
-    
-    .simplicity-footer .cell{
-      align-items: baseline;
-    }
-    
-@media print, screen and (max-width: 40em){ /* Mobile */
-    .simplicity-footer{
-      font-size: 3vw;
-    }
-}       
   </style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
@@ -227,29 +195,6 @@ $this->end();
           <?= $this->fetch('content') ?>
         </div>
       </div>
-      <footer class="simplicity-footer is_closed">
-        <div class="grid-container fluid">
-          <div class="grid-x grid-margin-x">
-          	<div class="cell auto">
-              Powered by&nbsp;<a href="https://simplicity.madskullcreations.com" target="_blank">Simplicity CMS</a>&nbsp;- Simple yet powerful
-          	</div>
-            
-            <?php
-              // Start page need no login button.
-              if($userIsLoggedIn)
-              {
-            ?>
-            <div class="cell small-1">
-            <?php
-              echo '<a class="button logout" title="'.__("Logout").'" href="/users/logout">'.__("Logout").'</a>';
-            ?>
-            </div>
-            <?php
-              }
-            ?>
-          </div>
-        </div>
-      </footer>
     </div>
   </div>
       
@@ -275,7 +220,7 @@ $this->end();
     
     $(function(){
       var h = $("#simplicity-content").height();
-      $("#hackisch-block").height(h * 0.8);
+      $("#hackisch-block").height(h * 0.7);
     });
     
 <?php
@@ -329,6 +274,114 @@ else
       // alert(window.location.pathname);
     }
   </script>
+  
+  <script>
+    // Experimental drag screen behaviour.
+    // TODO: It should not activate if selecting text or anything else is happening.
+    var isDraggingScreen = false;
+    var mouseDown = false;
+    var timeOfMouseDown = -1;
+    var timeOfFirstMouseMove = -1;
+    var clickY = 0;
+    
+    // Note: aint working, since selectstart triggers on _any_ element below mouse cursor, not just text.
+    // ..so it fires as soon as mouse is down, even before moving it.
+    // Note: Analyzing the selected element could do the trick, allowing text selection for example, cancelling
+    //  everything else. Half-assed solution though..
+    // 
+    // document.addEventListener('selectstart', disableSelectWhenDraggingScreen);
+    
+    $(document)
+      .mousedown(function(e){
+        isDraggingScreen = false;
+        mouseDown = true;
+        
+        var d = new Date();
+        timeOfMouseDown = d.getTime();
+        
+        clickY = e.pageY;
+      })
+      .mousemove(function(e){
+        if(mouseDown)
+        {
+          if(timeOfFirstMouseMove == -1)
+          {
+            var d = new Date();
+            timeOfFirstMouseMove = d.getTime();
+          }
+          
+          if(isDraggingScreen)
+          {
+            updateScrollPos(e);
+          }
+          else
+          {
+            var diff = timeOfFirstMouseMove - timeOfMouseDown;
+            
+            if(diff < 300)
+            {
+              isDraggingScreen = true;
+              $('html').css('cursor', 'row-resize');
+       
+              // Cancel any ongoing selections. (not working)
+              // e.cancelBubble = true;
+              // if (document.selection)
+              // {
+              // console.log("yeah");
+                  // document.selection.empty(); // works in IE (7/8/9/10)
+              // }
+              // else if (window.getSelection)
+              // {
+              // console.log("yo");
+                  // window.getSelection().collapseToStart(); // works in chrome/safari/opera/FF
+              // }
+       
+              // Turn off select text and draggability.
+              // document.addEventListener('selectstart', disableSelect);
+            }
+            else
+            {
+              // Normal select by dragging applies.
+              $('html').css('cursor', 'crosshair');
+            }
+          }
+        }
+      })
+      .mouseup(function(){
+        $('html').css('cursor', 'default');
+        isDraggingScreen = false;
+        mouseDown = false;
+        timeOfMouseDown = -1;
+        timeOfFirstMouseMove = -1;
+        
+        // document.removeEventListener('selectstart', disableSelect);
+      });
+      
+    function updateScrollPos(e)
+    {
+      $(window).scrollTop($(window).scrollTop() + (clickY - e.pageY));
+    }      
+    function disableSelectWhenDraggingScreen(e)
+    {
+      console.log(e);
+      
+      // e.srcElement contains the element selected.
+      // e.innerText contains any text the element contains, not defined if no text.
+      // e.srcElement.nodeType == 3
+      
+      if(timeOfFirstMouseMove == -1)
+      {
+        console.log("stop 1");
+        e.preventDefault();
+      }
+
+      if(isDraggingScreen)
+      {
+        console.log("stop 2");
+        e.preventDefault();
+      }
+    }
+  </script>  
   
   <?= $this->Html->script('prism') ?>
 </body>

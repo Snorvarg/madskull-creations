@@ -16,7 +16,7 @@ use App\Controller\CategoriesController;
     height: 45%;
   }
   .the-fancy-content{
-    color: #bbbbbb;
+    color: #ababab;
     font-family: "Kunstler";
     font-size: 9vw;
         
