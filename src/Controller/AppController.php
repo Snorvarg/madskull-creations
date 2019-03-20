@@ -18,6 +18,7 @@ use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
+use Cake\I18n\I18n;
 
 /**
  * Application Controller
@@ -111,14 +112,20 @@ class AppController extends Controller
           }
         }
         
-        
         // TODO: Try to get from browser cookie, and if no cookie, use the default language of the site.
+        // http://www.localizingjapan.com/blog/2011/11/10/localizing-a-cakephp-application/
+        // TODO: Test this:
+        // locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         
         if(AppController::$selectedLanguage == null)
         {
           // No language found from url. Fetch default language.
           AppController::$selectedLanguage = AppController::$defaultLanguage;
         }
+
+        // Tell cake which language to use when translating text elements found in __('text').
+        I18n::setLocale(AppController::$selectedLanguage);
+        // debug(I18n::getLocale());
         
         // Fetch some site-global settings from the kitchen sink.
         AppController::$simplicity_site_title = $kitchenSink->Retrieve('SimplicitySiteTitle', 'Simplicity CMS');
@@ -170,6 +177,7 @@ class AppController extends Controller
           
           $sub = array();
           $sub[] = $this->Menu->CreateMenuElement(__("Add new language"), 1, 'simplicity_settings/language');
+          $sub[] = $this->Menu->CreateMenuElement(__("Various settings"), 1, 'simplicity_settings/various');
           $sideMenuTreeAdmin[] = $this->Menu->CreateMenuElement(__("Overview"), 0, 'simplicity_settings', 'Categories', $sub);
                     
           $this->set('sideMenuTreeAdmin', $sideMenuTreeAdmin);
@@ -356,4 +364,28 @@ class AppController extends Controller
       
     	return false;
     }
+    
+  /**
+   * Returns available layout files in the Template/Layout folder, excluding some irrelevant layout files.
+   * 
+   */
+  protected function FetchLayoutFiles()
+  {
+    $dir = APP.'Template'.DS.'Layout'.DS;
+    $res = scandir($dir);
+    // debug($res);
+    
+    $layoutFiles = array();
+    foreach($res as $key => $name)
+    {
+      if(strpos($name, '.ctp') && in_array($name, ['default.ctp', 'error.ctp', 'installer.ctp']) == false)
+      {
+        $name = str_replace('.ctp', '', $name);
+        $layoutFiles[$name] = $name;
+      }
+    }
+    // debug($layoutFiles);
+    
+    return $layoutFiles;
+  }    
 }

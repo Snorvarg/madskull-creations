@@ -393,6 +393,9 @@ class CategoriesController extends AppController
     $layoutFiles = $this->FetchLayoutFiles();
     
     $this->set(compact('path','i18n','availableLanguageCodes','layoutFiles','categoryElement'));
+    
+    // In admin pages the simplicity layout are always used.
+    $this->viewBuilder()->layout('simplicity');
   }
   
   /**
@@ -461,6 +464,9 @@ class CategoriesController extends AppController
     $layoutFiles = $this->FetchLayoutFiles();
     
     $this->set(compact('i18n','availableLanguageCodes','implementedLanguageCodes','missingLanguages', 'layoutFiles','categoryElement'));
+    
+    // In admin pages the simplicity layout are always used.
+    $this->viewBuilder()->layout('simplicity');
   }
       
   /**
@@ -531,6 +537,9 @@ class CategoriesController extends AppController
     // debug($categoryElement);
     
     $this->set(compact('i18n','availableLanguageCodes','missingLanguages', 'layoutFiles','categoryElement'));
+    
+    // In admin pages the simplicity layout are always used.
+    $this->viewBuilder()->layout('simplicity');
   }
   
   /**
@@ -582,30 +591,6 @@ class CategoriesController extends AppController
 		
 		return $this->redirect('/');
 	}
-  
-  /**
-   * Returns available layout files in the Template/Layout folder, excluding some irrelevant layout files.
-   * 
-   */
-  protected function FetchLayoutFiles()
-  {
-    $dir = APP.'Template'.DS.'Layout'.DS;
-    $res = scandir($dir);
-    // debug($res);
-    
-    $layoutFiles = array();
-    foreach($res as $key => $name)
-    {
-      if(strpos($name, '.ctp') && in_array($name, ['default.ctp', 'error.ctp', 'installer.ctp']) == false)
-      {
-        $name = str_replace('.ctp', '', $name);
-        $layoutFiles[$name] = $name;
-      }
-    }
-    // debug($layoutFiles);
-    
-    return $layoutFiles;
-  }
 }
 
 
