@@ -78,13 +78,13 @@ class CategoriesController extends AppController
     // Allow nothing. (Except 'display' which are explicitly allowed in beforeFilter().)
     return false;
   }
+
   /**
    * display() call this function when the page 'contact' are viewed.
    * 
    */
   protected function view_contact($categoryElement)
   {
-    $form = new ContactForm();
     $errors = [];
     
 		if($this->request->is(['post', 'put'])) 
@@ -124,6 +124,8 @@ class CategoriesController extends AppController
             
         // debug($email);
         $this->Flash->success(__('Thank you for contacting us, we will get in touch soon!'));
+        
+        $this->request->data = [];
       }
       else 
       {
@@ -131,8 +133,6 @@ class CategoriesController extends AppController
       }
     }
     
-    // debug($form);
-    $this->set('form', $form);
     $this->set('errors', $errors);
   }
   
