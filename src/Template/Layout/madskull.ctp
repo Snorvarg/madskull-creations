@@ -94,6 +94,18 @@ $this->end();
 </head>
 <body>
   <style>
+  @font-face {
+    font-family: "GillSansMT-Condensed";
+    src: local('☺'), url('/font/GillSansMT-Condensed.woff') format('woff');
+  }
+  @font-face {
+    font-family: "Devanagari";
+    src: local('☺'), url('/font/AdobeDevanagari-Regular.otf') format('otf');
+  }
+  
+  .site-title, .site-description, #simplicity_top_menu{
+    font-family: "GillSansMT-Condensed";
+  }  
   </style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
