@@ -102,10 +102,34 @@ $this->end();
     font-family: "Devanagari";
     src: local('☺'), url('/font/AdobeDevanagari-Regular.otf') format('otf');
   }
-  
-  .site-title, .site-description, #simplicity_top_menu{
+  .site-title, .site-description, #simplicity_top_menu, .button{
     font-family: "GillSansMT-Condensed";
-  }  
+  }
+  h1, .h1,
+  h2, .h2,
+  h3, .h3,
+  h4, .h4,
+  h5, .h5,
+  h6, .h6,
+  body{
+    font-family: "Devanagari";
+  }
+  p{
+    font-size: 115%;
+  }
+  .top-menu-bar{
+    font-size: 1.5rem;
+  }
+  .button{
+    font-size: 1.3rem;
+    padding: 0.44em;
+  }
+  .simplicity-side-menu, 
+  .simplicity-side-menu h4, 
+  .simplicity-side-menu h6,
+  .simplicity-footer{
+    font-family: "GillSansMT-Condensed";
+  }
   </style>
 	<div id="simplicity-wrapper">
     <div id="simplicity-inner-wrapper">
@@ -172,7 +196,7 @@ $this->end();
               if($userIsLoggedIn)
               {
             ?>
-            <div class="cell small-3">
+            <div class="cell small-3 simplicity-side-menu">
               <?= $this->fetch('simplicity_side_menu') ?>
             </div>
             <?php
