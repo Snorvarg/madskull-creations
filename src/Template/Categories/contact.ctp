@@ -14,8 +14,8 @@ use App\Controller\CategoriesController;
 //   <-TODO: This is the way to go. Stuff not yet translated go into simplicity.po, 
 //           and you use the _d("simplicity", "simple text to translate.");
 // 
-echo '<p>'.__("You are not authorized to access that location.").'</p>'; // Looks for default.po.
-echo '<p>'.__d("cake", "You are not authorized to access that location.").'</p>'; // Looks for cake.po
+// echo '<p>'.__("You are not authorized to access that location.").'</p>'; // Looks for default.po.
+// echo '<p>'.__d("cake", "You are not authorized to access that location.").'</p>'; // Looks for cake.po
 
 // Using zurbs data-abide.
 echo $this->Form->create(null, ['id' => 'contactForm', 'data-abide' => '', 'novalidate' => true]);
