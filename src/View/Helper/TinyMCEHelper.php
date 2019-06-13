@@ -39,8 +39,19 @@ class TinyMCEHelper extends Helper
         ],
         relative_urls: false,
         file_browser_callback: fileBrowserCallBack,
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor",
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor | template",
         entity_encoding : "raw",
+        templates: [
+          {
+            title: "Some title 1", 
+            description: "Some desc 1", 
+            content: ""
+          }
+        ],
+        template_replace_values: {
+            username: "Jack Black",
+            staffid: "991234"
+        },
         setup: function (editor) {
             editor.on("init", function(args) {
                 editor = args.target;
